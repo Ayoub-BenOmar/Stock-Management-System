@@ -1,16 +1,18 @@
 import express from "express";
 import bodyParser from "body-parser";
+import productRoute from './routes/product.routes.js';
 
 const app = express();
 const port = 3000;
 
 app.use(bodyParser.json());
 app.use(express.json());
-app.use('/api/products', productRoutes);
 
 app.get("/", (req, res) =>{
     res.send("Home Page");
 });
+
+app.use("/api/products", productRoute);
 
 app.post("/register", (req, res) =>{
     res.sendStatus(201);
