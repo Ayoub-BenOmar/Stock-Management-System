@@ -2,7 +2,8 @@ import {
   addProduct as addProductService,
   getAllProducts as getAllProductsService,
   getProductById as getProductByIdService,
-  updateProduct as updateProductService
+  updateProduct as updateProductService,
+  deleteProduct as deleteProductService
 } from "../services/product.service.js";
 
 export const addProduct = async (req, res) => {
@@ -41,6 +42,15 @@ export const updateProduct = async(req, res) => {
     if(!product){
       res.status(404).json({ message: "Product not found" });
     }
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  };
+};
+
+export const deleteProduct = async(req, res) =>{
+  try{
+    const product = await deleteProductService(req.params.id);
     res.status(200).json(product);
   } catch (error) {
     res.status(500).json({ message: error.message });

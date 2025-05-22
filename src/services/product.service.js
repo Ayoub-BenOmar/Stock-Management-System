@@ -2,7 +2,8 @@ import {
     addProduct as addProductModel,
     getAllProducts as getAllProductsModel,
     getProductById as getProductByIdModel,
-    updateProduct as updateProductService
+    updateProduct as updateProductModel,
+    deleteProduct as deleteProductModel
 } from "../models/product.model.js";
 
   export const addProduct = async (data) => {
@@ -19,5 +20,9 @@ import {
 
   export const updateProduct = async(id, data) =>{
     return await updateProductService(id, data);
-  } 
+  }
+  
+  export const deleteProduct = async(id) =>{
+    return await deleteProductModel(id);
+  }
   

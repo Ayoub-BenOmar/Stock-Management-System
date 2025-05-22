@@ -36,6 +36,13 @@ export const updateProduct = async(id, {name, description, quantity, price}) =>{
     return result.rows[0];
 }
 
+export const deleteProduct = async(id) =>{
+    const result = await pool.query(
+        `DELETE FROM products WHERE id = $1`,
+        [id]
+    );
+};
+
 
 
 
