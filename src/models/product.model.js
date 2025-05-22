@@ -13,9 +13,12 @@ export const addProduct = async ({name, description, quantity, price}) => {
 
 export const getAllProducts = async(req, res) =>{
     const result = await pool.query(
-        `SELECT * FROM products`,
+        `SELECT * FROM products`
     );
 
     return result.rows;
 }
+
+
+
 
