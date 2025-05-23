@@ -1,6 +1,8 @@
-import { addCategory as addCategoryService,
-        deleteCategory as deleteCategoryService
-    } from "../services/category.service.js";
+import {
+  addCategory as addCategoryService,
+  deleteCategory as deleteCategoryService,
+  getAllCategories as getAllCategoriesService,
+} from "../services/category.service.js";
 
 export const addCategory = async (req, res) => {
   try {
@@ -18,13 +20,20 @@ export const addCategory = async (req, res) => {
   }
 };
 
-export const deleteCategory = async(req, res) => {
-    try {
-        const category = await deleteCategoryService(req.params.id);
-        res.status(200).json(category);
-    } catch (error) {
-        res.status(500).json({message: error.message});
-    };
+export const deleteCategory = async (req, res) => {
+  try {
+    const category = await deleteCategoryService(req.params.id);
+    res.status(200).json(category);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-
+export const getAllCategories = async (req, res) => {
+  try {
+    const categories = await getAllCategoriesService();
+    res.status(200).json(categories);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
