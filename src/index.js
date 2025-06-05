@@ -20,13 +20,13 @@ app.use("/api/users", userRoute);
 app.use("/api/products", authenticateToken, productRoute);
 app.use("/api/category", authenticateToken, categoryRoute);
 
-app.post("/register", (req, res) =>{
-    res.sendStatus(201);
-});
+// app.post("/register", (req, res) =>{
+//     res.sendStatus(201);
+// });
 
-app.post("/login", (req, res) =>{
-    res.sendStatus(200);
-});
+// app.post("/login", (req, res) =>{
+//     res.sendStatus(200);
+// });
 
 app.listen(port, () =>{
     console.log(`Your server running on port ${port}`);
