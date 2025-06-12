@@ -104,3 +104,25 @@ export const updateSupplier = async (req, res) => {
         return res.status(500).json({ error: error.message})
     }
 }
+
+export const deleteSupplier = async (req, res) => {
+    try {
+        const existingSupplier = await prisma.supplier.findUnique({
+            where: {
+                id: parseInt(req.params.id)
+            }
+        })
+
+        if(!existingSupplier){
+            return res.status(404).json({ error: "Supplier not found"})
+        }
+
+        await prisma.supplier.delete({
+            where: { id: parseInt(req.params.id) }
+        })
+
+        return res.status(204).send();
+    } catch (error) {
+        return res.status(500).json({ error: error.message})
+    }
+}
