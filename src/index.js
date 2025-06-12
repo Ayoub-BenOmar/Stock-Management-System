@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import productRoute from './routes/product.routes.js';
 import categoryRoute from './routes/category.routes.js';
 import userRoute from './routes/user.routes.js';
+import supplierRoute from './routes/supplier.routes.js';
 
 const app = express();
 const port = 3000;
@@ -17,6 +18,7 @@ app.get("/", (req, res) =>{
 app.use("/api/categories", categoryRoute);
 app.use("/api/products", productRoute);
 app.use("/api/users", userRoute);
+app.use("/api/suppliers", supplierRoute);
 
 app.listen(port, () =>{
     console.log(`Your server running on port ${port}`);

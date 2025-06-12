@@ -3,11 +3,11 @@ const prisma = new PrismaClient();
 
 export const createProduct = async (req, res) => {
     try {
-        const { name, description, price, quantity, categoryId } = req.body;
+        const { name, description, price, quantity, categoryId, supplierId } = req.body;
 
-        if (!name || !price || !categoryId) {
+        if (!name || !price || !categoryId || supplierId) {
             return res.status(422).json({
-                error: 'Name, price, and categoryId are required'
+                error: 'Name, price, categoryId and supplierId are required'
             });
         }
 
@@ -33,6 +33,16 @@ export const createProduct = async (req, res) => {
             });
         }
 
+        const supplier = await prisma.supplier.findUnique({
+            where: { id: supplierId }
+        });
+
+        if (!supplier) {
+            return res.status(404).json({
+                error: 'Supplier not found'
+            });
+        }
+
         const newProduct = await prisma.product.create({
             data: req.body,
 
@@ -42,11 +52,17 @@ export const createProduct = async (req, res) => {
                         id: true,
                         name: true
                     }
+                },
+                supplier: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
                 }
             },
 
             omit: {
-                categoryId: true
+                supplierId: true
             }
         });
 

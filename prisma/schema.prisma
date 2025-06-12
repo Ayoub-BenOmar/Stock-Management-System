@@ -40,7 +40,22 @@ model Product {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
   categoryId  Int      @map("category_id")
+  supplierId  Int      @map("supplier_id")
   category    Category @relation(fields: [categoryId], references: [id])
+  supplier    Supplier @relation(fields: [supplierId], references: [id])
 
   @@map("products")
+}
+
+model Supplier {
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(60)
+  email     String
+  phone     String
+  address   String?   @db.Text
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  products  Product[]
+
+  @@map("suppliers")
 }
