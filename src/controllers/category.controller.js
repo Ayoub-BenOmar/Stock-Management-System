@@ -62,7 +62,6 @@ export const updateCategory = async (req, res) => {
             return res.status(404).json({ error: 'Category not found' });
         }
 
-        // Check if the new name already exists for a different category
         const nameExists = await prisma.category.findFirst({
             where: {
                 name: req.body.name,

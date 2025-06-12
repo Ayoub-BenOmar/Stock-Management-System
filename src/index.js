@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import productRoute from './routes/product.routes.js';
 import categoryRoute from './routes/category.routes.js';
 
 const app = express();
@@ -12,16 +13,9 @@ app.get("/", (req, res) =>{
     res.send("Home Page");
 });
 
-// For testing, we'll remove the authentication middleware
 app.use("/api/categories", categoryRoute);
+app.use("/api/products", productRoute);
 
-// app.post("/register", (req, res) =>{
-//     res.sendStatus(201);
-// });
-
-// app.post("/login", (req, res) =>{
-//     res.sendStatus(200);
-// });
 
 app.listen(port, () =>{
     console.log(`Your server running on port ${port}`);
