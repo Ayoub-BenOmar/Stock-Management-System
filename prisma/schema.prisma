@@ -7,6 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique @db.VarChar(60)
+  email     String   @unique @db.VarChar(120)
+  password  String   @db.VarChar(255)
+  role      String   @default("user") @db.VarChar(20)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
 model Category {
   id        Int       @id @default(autoincrement())
   name      String    @unique @db.VarChar(60)

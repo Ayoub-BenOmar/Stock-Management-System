@@ -60,7 +60,16 @@ export const getProducts = async (req, res) => {
     try {
         const products = await prisma.product.findMany({
             include: {
-                category: true
+                category: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                }
+            },
+
+            omit: {
+                categoryId: true
             }
         });
         return res.status(200).json(products);
@@ -74,7 +83,16 @@ export const getProduct = async (req, res) => {
         const product = await prisma.product.findUnique({
             where: { id: parseInt(req.params.id) },
             include: {
-                category: true
+                category: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                }
+            },
+
+            omit: {
+                categoryId: true
             }
         });
 
@@ -134,7 +152,16 @@ export const updateProduct = async (req, res) => {
                 active
             },
             include: {
-                category: true
+                category: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                }
+            },
+
+            omit: {
+                categoryId: true
             }
         });
 
