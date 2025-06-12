@@ -62,6 +62,7 @@ export const createProduct = async (req, res) => {
             },
 
             omit: {
+                categoryId: true,
                 supplierId: true
             }
         });
@@ -81,11 +82,18 @@ export const getProducts = async (req, res) => {
                         id: true,
                         name: true
                     }
+                },
+                supplier: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
                 }
             },
 
             omit: {
-                categoryId: true
+                categoryId: true,
+                supplierId: true
             }
         });
         return res.status(200).json(products);
@@ -104,11 +112,18 @@ export const getProduct = async (req, res) => {
                         id: true,
                         name: true
                     }
+                }, 
+                supplier: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
                 }
             },
 
             omit: {
-                categoryId: true
+                categoryId: true,
+                supplierId: true
             }
         });
 
@@ -145,6 +160,16 @@ export const updateProduct = async (req, res) => {
             }
         }
 
+        if (supplierId) {
+            const supplier = await prisma.category.findUnique({
+                where: { id: supplierId }
+            });
+
+            if (!supplier) {
+                return res.status(404).json({ error: 'Supplier not found' });
+            }
+        }
+
         if (price !== undefined && price <= 0) {
             return res.status(422).json({
                 error: 'Price must be greater than 0'
@@ -165,6 +190,7 @@ export const updateProduct = async (req, res) => {
                 price,
                 quantity,
                 categoryId,
+                supplierId,
                 active
             },
             include: {
@@ -173,11 +199,18 @@ export const updateProduct = async (req, res) => {
                         id: true,
                         name: true
                     }
+                }, 
+                supplier: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
                 }
             },
 
             omit: {
-                categoryId: true
+                categoryId: true,
+                supplierId: true
             }
         });
 
