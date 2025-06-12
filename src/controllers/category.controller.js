@@ -1,39 +1,24 @@
-import {
-  addCategory as addCategoryService,
-  deleteCategory as deleteCategoryService,
-  getAllCategories as getAllCategoriesService,
-} from "../services/category.service.js";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient()
 
-export const addCategory = async (req, res) => {
-  try {
-    const { name } = req.body;
+exports.createCategory = async (req, res) => {
+    try {
+        if (!req.body.name) {
+            return res.status(422).json({ error: 'Name is required' })
+        }
 
-    if (!name) {
-      return res.status(400).json({ message: "Category name is required" });
+        if (await prisma.category.findUnique({ where: { name: req.body.name } })) {
+            return res.status(409).json({ error: `${req.body.name} category already exists` })
+        }
+
+        const newCategory = await prisma.category.create({
+            data: {
+                name: req.body.name
+            }
+        })
+
+        return res.status(201).json(newCategory)
+    } catch (error) {
+        return res.status(500).json({ error: error.message })
     }
-
-    const category = await addCategoryService(name);
-    res.status(201).json(category);
-  } catch (error) {
-    console.error("Add category error:", error);
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const deleteCategory = async (req, res) => {
-  try {
-    const category = await deleteCategoryService(req.params.id);
-    res.status(200).json(category);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const getAllCategories = async (req, res) => {
-  try {
-    const categories = await getAllCategoriesService();
-    res.status(200).json(categories);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+}
