@@ -27,7 +27,7 @@ export const createSupplier = async (req, res) =>{
 
 export const getSuppliers = async (req, res) =>{
     try {
-        const suppliers = prisma.supplier.findMany();
+        const suppliers = await prisma.supplier.findMany();
         return res.status(200).json(suppliers);
     } catch (error) {
         return res.status(500).json({ error: error.message })
