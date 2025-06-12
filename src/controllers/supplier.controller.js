@@ -33,3 +33,17 @@ export const getSuppliers = async (req, res) =>{
         return res.status(500).json({ error: error.message })
     }
 }
+
+export const getSupplier = async (req, res) => {
+    try {
+        const supplier = await prisma.supplier.findFirst({ where: { id: parseInt(req.params.id) }})
+
+        if(!supplier){
+            return res.status(404).json({error: 'Supplier not found'})
+        }
+
+        return res.status(200).json(supplier);
+    } catch (error) {
+        return res.status(500).json({ error: error.message })
+    }
+}
