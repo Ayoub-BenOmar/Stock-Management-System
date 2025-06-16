@@ -5,6 +5,7 @@ import categoryRoute from './routes/category.routes.js';
 import userRoute from './routes/user.routes.js';
 import supplierRoute from './routes/supplier.routes.js';
 import salesRoute from './routes/sale.routes.js';
+import dashboardRoute from './routes/dashboard.routes.js';
 
 const app = express();
 const port = 3000;
@@ -21,6 +22,7 @@ app.use("/api/products", productRoute);
 app.use("/api/users", userRoute);
 app.use("/api/suppliers", supplierRoute);
 app.use("/api/sales", salesRoute);
+app.use("/api/dashboard", dashboardRoute);
 
 app.listen(port, () =>{
     console.log(`Your server running on port ${port}`);

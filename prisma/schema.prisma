@@ -31,19 +31,20 @@ model Category {
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  name        String   @db.VarChar(120)
-  description String?  @db.Text
-  price       Decimal  @db.Decimal(10, 2)
-  quantity    Int      @default(0)
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  categoryId  Int      @map("category_id")
-  supplierId  Int      @map("supplier_id")
-  category    Category @relation(fields: [categoryId], references: [id])
-  supplier    Supplier @relation(fields: [supplierId], references: [id])
-  sales       Sale[]
+  id           Int              @id @default(autoincrement())
+  name         String           @db.VarChar(120)
+  description  String?          @db.Text
+  price        Decimal          @db.Decimal(10, 2)
+  quantity     Int              @default(0)
+  active       Boolean          @default(true)
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
+  categoryId   Int              @map("category_id")
+  supplierId   Int              @map("supplier_id")
+  category     Category         @relation(fields: [categoryId], references: [id])
+  supplier     Supplier         @relation(fields: [supplierId], references: [id])
+  sales        Sale[]
+  topSellingIn DashboardStats[] @relation("TopSellingProduct")
 
   @@map("products")
 }
@@ -62,13 +63,30 @@ model Supplier {
 }
 
 model Sale {
-  id        Int      @id @default(autoincrement())
-  productId Int      @map("product_id")
-  quantity  Int
-  totalPrice Decimal @db.Decimal(10, 2)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  product   Product  @relation(fields: [productId], references: [id])
+  id         Int      @id @default(autoincrement())
+  productId  Int      @map("product_id")
+  quantity   Int
+  totalPrice Decimal  @db.Decimal(10, 2)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  product    Product  @relation(fields: [productId], references: [id])
 
   @@map("sales")
+}
+
+model DashboardStats {
+  id                 Int      @id @default(autoincrement())
+  totalSales         Decimal  @default(0) @db.Decimal(10, 2)
+  totalProducts      Int      @default(0)
+  totalCategories    Int      @default(0)
+  totalSuppliers     Int      @default(0)
+  lowStockProducts   Int      @default(0)
+  outOfStockProducts Int      @default(0)
+  monthlyRevenue     Decimal  @default(0) @db.Decimal(10, 2)
+  dailySales         Int      @default(0)
+  topSellingProduct  Int?     @map("top_selling_product_id")
+  lastUpdated        DateTime @default(now()) @map("last_updated")
+  topProduct         Product? @relation("TopSellingProduct", fields: [topSellingProduct], references: [id])
+
+  @@map("dashboard_stats")
 }
