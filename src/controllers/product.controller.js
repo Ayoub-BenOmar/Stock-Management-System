@@ -5,7 +5,7 @@ export const createProduct = async (req, res) => {
     try {
         const { name, description, price, quantity, categoryId, supplierId } = req.body;
 
-        if (!name || !price || !categoryId || supplierId) {
+        if (!name || !price || !categoryId || !supplierId) {
             return res.status(422).json({
                 error: 'Name, price, categoryId and supplierId are required'
             });
