@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import cors from "cors";
 import productRoute from './routes/product.routes.js';
 import categoryRoute from './routes/category.routes.js';
 import userRoute from './routes/user.routes.js';
@@ -9,6 +10,9 @@ import dashboardRoute from './routes/dashboard.routes.js';
 
 const app = express();
 const port = 3000;
+
+// Enable CORS for all routes
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(express.json());
