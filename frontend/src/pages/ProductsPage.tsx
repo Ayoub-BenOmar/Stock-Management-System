@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import PageHeader from "../components/page-header"
 import CategoryFilter from "../components/category-filter"
 import ProductsGrid from "../components/products-grid"
+import CartModal from "../components/cart-modal"
 import type { Product } from "../components/ProductCard"
 
 interface Category {
@@ -15,6 +16,7 @@ export default function ProductsPage() {
   const [selectedCategories, setSelectedCategories] = useState<number[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [loading, setLoading] = useState(true)
+  const [isCartModalOpen, setIsCartModalOpen] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,12 +62,21 @@ export default function ProductsPage() {
     alert("Sign in clicked!")
   }
 
+  const handleCartClick = () => {
+    setIsCartModalOpen(true)
+  }
+
+  const handleCloseCartModal = () => {
+    setIsCartModalOpen(false)
+  }
+
   return (
     <div>
       <PageHeader
         onSignIn={handleSignIn}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        onCartClick={handleCartClick}
       />
       <CategoryFilter
         categories={categories}
@@ -77,6 +88,7 @@ export default function ProductsPage() {
       <main className="container mx-auto px-4 py-8">
         <ProductsGrid products={filteredProducts} isLoading={loading} />
       </main>
+      <CartModal isOpen={isCartModalOpen} onClose={handleCloseCartModal} />
     </div>
   )
 } 

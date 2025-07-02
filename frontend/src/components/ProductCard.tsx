@@ -2,6 +2,7 @@ import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card"
 import { ShoppingCart, Eye, Package } from "lucide-react"
+import { useCart } from "../contexts/CartContext"
 
 export interface Product {
   id: number
@@ -27,6 +28,8 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const { addToCart } = useCart()
+  
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -36,6 +39,10 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const isOutOfStock = product.quantity === 0
   const isLowStock = product.quantity > 0 && product.quantity <= 5
+
+  const handleAddToCart = () => {
+    addToCart(product, 1)
+  }
 
   return (
     <Card className="w-full max-w-sm overflow-hidden transition-all duration-300 hover:shadow-lg">
@@ -92,7 +99,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </CardContent>
 
       <CardFooter className="p-4 pt-0 flex gap-2">
-        <Button className="flex-1" disabled={!product.active || isOutOfStock}>
+        <Button className="flex-1" disabled={!product.active || isOutOfStock} onClick={handleAddToCart}>
           <ShoppingCart className="h-4 w-4 mr-2" />
           Add to Cart
         </Button>

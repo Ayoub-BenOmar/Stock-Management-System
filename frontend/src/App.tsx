@@ -1,12 +1,15 @@
 import React from "react";
 import "./App.css";
 import ProductsPage from "./pages/ProductsPage";
+import { CartProvider } from "./contexts/CartContext";
 
 function App() {
   return (
-    <div className="App">
-      <ProductsPage />
-    </div>
+    <CartProvider>
+      <div className="App">
+        <ProductsPage />
+      </div>
+    </CartProvider>
   );
 }
 
