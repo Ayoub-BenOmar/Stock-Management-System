@@ -1,8 +1,9 @@
 import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card"
-import { ShoppingCart, Eye, Package } from "lucide-react"
+import { ShoppingCart, Eye, Package, Heart } from "lucide-react"
 import { useCart } from "../contexts/CartContext"
+import { useWishlist } from "../contexts/WishlistContext"
 
 export interface Product {
   id: number
@@ -29,6 +30,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart()
+  const { addToWishlist, isInWishlist, removeFromWishlist } = useWishlist()
   
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -39,9 +41,18 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const isOutOfStock = product.quantity === 0
   const isLowStock = product.quantity > 0 && product.quantity <= 5
+  const inWishlist = isInWishlist(product.id)
 
   const handleAddToCart = () => {
     addToCart(product, 1)
+  }
+
+  const handleWishlistClick = () => {
+    if (inWishlist) {
+      removeFromWishlist(product.id)
+    } else {
+      addToWishlist(product)
+    }
   }
 
   return (
@@ -66,6 +77,17 @@ export default function ProductCard({ product }: ProductCardProps) {
               </Badge>
             </div>
           )}
+          <div className="absolute top-2 right-2">
+            <Button
+              variant={inWishlist ? "default" : "outline"}
+              size="icon"
+              onClick={handleWishlistClick}
+              className={inWishlist ? "text-red-500" : ""}
+            >
+              <Heart className={inWishlist ? "h-5 w-5 fill-current" : "h-5 w-5"} />
+              <span className="sr-only">{inWishlist ? "Remove from wishlist" : "Add to wishlist"}</span>
+            </Button>
+          </div>
         </div>
       </CardHeader>
 

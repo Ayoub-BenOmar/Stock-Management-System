@@ -39,7 +39,7 @@ export default function CategoryFilter({
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {categories.map((category) => {
+            {categories.filter(category => category && category.id !== undefined).map((category) => {
               const isSelected = selectedCategories.includes(category.id)
               return (
                 <Button
@@ -47,7 +47,7 @@ export default function CategoryFilter({
                   variant={isSelected ? "default" : "outline"}
                   size="sm"
                   onClick={() => onCategoryToggle(category.id)}
-                  className="transition-all duration-200"
+                  className="transition-all duration-200 h-8 px-3"
                 >
                   {category.name}
                   {isSelected && <X className="h-3 w-3 ml-1" />}

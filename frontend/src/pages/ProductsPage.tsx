@@ -10,7 +10,12 @@ interface Category {
   name: string
 }
 
-export default function ProductsPage() {
+interface ProductsPageProps {
+  onGoToWishlist?: () => void
+  onGoToLogin?: () => void
+}
+
+export default function ProductsPage({ onGoToWishlist, onGoToLogin }: ProductsPageProps) {
   const [products, setProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [selectedCategories, setSelectedCategories] = useState<number[]>([])
@@ -26,12 +31,24 @@ export default function ProductsPage() {
           fetch("http://localhost:3000/api/products"),
           fetch("http://localhost:3000/api/categories"),
         ])
-        const productsData = await productsRes.json()
-        const categoriesData = await categoriesRes.json()
-        setProducts(productsData)
-        setCategories(categoriesData)
+        
+        if (productsRes.ok) {
+          const productsData = await productsRes.json()
+          setProducts(Array.isArray(productsData) ? productsData : [])
+        } else {
+          setProducts([])
+        }
+        
+        if (categoriesRes.ok) {
+          const categoriesData = await categoriesRes.json()
+          setCategories(Array.isArray(categoriesData) ? categoriesData : [])
+        } else {
+          setCategories([])
+        }
       } catch (err) {
-        // handle error
+        console.error("Error fetching data:", err)
+        setProducts([])
+        setCategories([])
       } finally {
         setLoading(false)
       }
@@ -51,7 +68,7 @@ export default function ProductsPage() {
 
   const filteredProducts = products.filter((product) => {
     const matchesCategory =
-      selectedCategories.length === 0 || selectedCategories.includes(product.category.id)
+      selectedCategories.length === 0 || (product.category && selectedCategories.includes(product.category.id))
     const matchesSearch =
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (product.description && product.description.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -73,10 +90,11 @@ export default function ProductsPage() {
   return (
     <div>
       <PageHeader
-        onSignIn={handleSignIn}
+        onSignIn={onGoToLogin || handleSignIn}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onCartClick={handleCartClick}
+        onGoToWishlist={onGoToWishlist}
       />
       <CategoryFilter
         categories={categories}

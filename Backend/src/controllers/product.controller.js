@@ -139,7 +139,7 @@ export const getProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
     try {
-        const { name, description, price, quantity, categoryId, active } = req.body;
+        const { name, description, price, quantity, categoryId, active, supplierId } = req.body;
         const productId = parseInt(req.params.id);
 
         const existingProduct = await prisma.product.findUnique({

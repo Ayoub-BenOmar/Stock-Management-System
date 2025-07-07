@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "./ui/button"
-import { User, Search, ShoppingCart } from "lucide-react"
+import { User, Search, ShoppingCart, Heart } from "lucide-react"
 import { Input } from "./ui/input"
 import { useCart } from "../contexts/CartContext"
 
@@ -10,9 +10,10 @@ interface PageHeaderProps {
   searchQuery: string
   onSearchChange: (query: string) => void
   onCartClick: () => void
+  onGoToWishlist?: () => void
 }
 
-export default function PageHeader({ onSignIn, searchQuery, onSearchChange, onCartClick }: PageHeaderProps) {
+export default function PageHeader({ onSignIn, searchQuery, onSearchChange, onCartClick, onGoToWishlist }: PageHeaderProps) {
   const { getCartItemCount } = useCart()
   const cartItemCount = getCartItemCount()
 
@@ -37,6 +38,10 @@ export default function PageHeader({ onSignIn, searchQuery, onSearchChange, onCa
           </div>
 
           <div className="flex items-center gap-2">
+            <Button onClick={onGoToWishlist} variant="outline" className="relative">
+              <Heart className="h-4 w-4 mr-2" />
+              Wishlist
+            </Button>
             <Button onClick={onCartClick} variant="outline" className="relative">
               <ShoppingCart className="h-4 w-4 mr-2" />
               Cart
