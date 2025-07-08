@@ -31,6 +31,7 @@ import {
   User,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
+import { useNavigate, NavLink } from "react-router-dom";
 
 const menuItems = [
   {
@@ -60,14 +61,19 @@ interface AdminSidebarProps {
   onItemClick?: (item: string) => void;
 }
 
-export default function AdminSidebar({
-  activeItem = "products",
-  onItemClick,
-}: AdminSidebarProps) {
+export default function AdminSidebar({ activeItem = "products" }: AdminSidebarProps) {
   const { logout, user } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
+  };
+
+  const handleMenuClick = (item: string) => {
+    if (item === "dashboard") navigate("/admin/dashboard");
+    else if (item === "products") navigate("/admin/products");
+    else if (item === "categories") navigate("/admin/categories");
+    else if (item === "suppliers") navigate("/admin/suppliers");
   };
 
   return (
@@ -92,7 +98,7 @@ export default function AdminSidebar({
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     isActive={activeItem === item.title.toLowerCase()}
-                    onClick={() => onItemClick?.(item.title.toLowerCase())}
+                    onClick={() => handleMenuClick(item.title.toLowerCase())}
                   >
                     <button className="flex items-center gap-2 w-full">
                       <item.icon className="h-4 w-4" />

@@ -5,6 +5,8 @@ import ProductsPage from "./pages/ProductsPage";
 import WishlistPage from "./components/wishlist-page";
 import LoginPage from "./components/login-page";
 import AdminProductsPage from "./components/admin-products";
+import AdminCategoriesPage from "./components/admin-categories";
+import AdminSuppliersPage from "./pages/AdminSuppliersPage";
 import { CartProvider } from "./contexts/CartContext";
 import { WishlistProvider } from "./contexts/WishlistContext";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
@@ -23,6 +25,8 @@ function AppContent() {
       <Route path="/wishlist" element={<WishlistPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/admin/products" element={isAuthenticated ? <AdminProductsPage /> : <Navigate to="/login" />} />
+      <Route path="/admin/categories" element={isAuthenticated ? <AdminCategoriesPage /> : <Navigate to="/login" />} />
+      <Route path="/admin/suppliers" element={isAuthenticated ? <AdminSuppliersPage /> : <Navigate to="/login" />} />
       {/* Add more routes as needed */}
     </Routes>
   );
