@@ -7,16 +7,13 @@ import EmptyWishlist from "./empty-wishlist"
 import CartModal from "./cart-modal"
 import { useWishlist } from "../contexts/WishlistContext"
 import { useCart } from "../contexts/CartContext"
+import { useNavigate } from "react-router-dom"
 
-
-interface WishlistPageProps {
-  onGoToProducts?: () => void;
-}
-
-export default function WishlistPage({ onGoToProducts }: WishlistPageProps) {
+export default function WishlistPage() {
   const { wishlistItems, removeFromWishlist, clearWishlist } = useWishlist()
   const { getCartItemCount, addToCart } = useCart()
   const [isCartModalOpen, setIsCartModalOpen] = useState(false)
+  const navigate = useNavigate()
 
   const handleRemoveFromWishlist = (productId: number) => {
     removeFromWishlist(productId)
@@ -33,9 +30,7 @@ export default function WishlistPage({ onGoToProducts }: WishlistPageProps) {
   }
 
   const handleBack = () => {
-    if (onGoToProducts) {
-      onGoToProducts()
-    }
+    navigate("/products")
   }
 
   const handleShare = () => {

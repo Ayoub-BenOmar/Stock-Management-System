@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Sidebar,
@@ -12,11 +12,25 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "./ui/sidebar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
-import { LayoutDashboard, Package, FolderTree, Building2, ChevronUp, LogOut, Settings, User } from "lucide-react"
-import { useAuth } from "../contexts/AuthContext"
+} from "./ui/sidebar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import {
+  LayoutDashboard,
+  Package,
+  FolderTree,
+  Building2,
+  ChevronUp,
+  LogOut,
+  Settings,
+  User,
+} from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
 
 const menuItems = [
   {
@@ -39,19 +53,22 @@ const menuItems = [
     url: "/admin/suppliers",
     icon: Building2,
   },
-]
+];
 
 interface AdminSidebarProps {
-  activeItem?: string
-  onItemClick?: (item: string) => void
+  activeItem?: string;
+  onItemClick?: (item: string) => void;
 }
 
-export default function AdminSidebar({ activeItem = "products", onItemClick }: AdminSidebarProps) {
-  const { logout, user } = useAuth()
-  
+export default function AdminSidebar({
+  activeItem = "products",
+  onItemClick,
+}: AdminSidebarProps) {
+  const { logout, user } = useAuth();
+
   const handleLogout = () => {
-    logout()
-  }
+    logout();
+  };
 
   return (
     <Sidebar>
@@ -66,7 +83,6 @@ export default function AdminSidebar({ activeItem = "products", onItemClick }: A
           </div>
         </div>
       </SidebarHeader>
-
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Management</SidebarGroupLabel>
@@ -91,41 +107,23 @@ export default function AdminSidebar({ activeItem = "products", onItemClick }: A
       </SidebarContent>
 
       <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-                  <Avatar className="h-6 w-6">
-                    <AvatarImage src="/placeholder.svg?height=24&width=24" />
-                    <AvatarFallback>AD</AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col items-start text-left">
-                    <span className="text-sm font-medium">{user?.username || "Admin User"}</span>
-                    <span className="text-xs text-muted-foreground">{user?.email || "admin@example.com"}</span>
-                  </div>
-                  <ChevronUp className="ml-auto h-4 w-4" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                <DropdownMenuItem>
-                  <User className="h-4 w-4 mr-2" />
-                  Profile
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="h-4 w-4 mr-2" />
-                  Settings
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleLogout}>
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <div className="flex items-center justify-between w-full px-4 py-2">
+          <div className="flex items-center gap-2">
+            <Avatar className="h-6 w-6">
+              <AvatarImage src="/placeholder.svg?height=24&width=24" />
+              <AvatarFallback>AD</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col items-start text-left">
+              <span className="text-sm font-medium">{user?.username || "Admin User"}</span>
+              <span className="text-xs text-muted-foreground">{user?.email || "admin@example.com"}</span>
+            </div>
+          </div>
+          <button onClick={handleLogout} className="ml-4 p-2 rounded hover:bg-muted transition-colors">
+            <LogOut className="h-5 w-5 text-destructive" />
+          </button>
+        </div>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

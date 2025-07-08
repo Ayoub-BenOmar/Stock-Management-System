@@ -59,6 +59,13 @@ export default function AddProductModal({
   const [isLoading, setIsLoading] = useState(false)
   const [categories, setCategories] = useState<{ id: number; name: string }[]>([])
   const [suppliers, setSuppliers] = useState<{ id: number; name: string }[]>([])
+  const [errors, setErrors] = useState({
+    name: "",
+    price: "",
+    quantity: "",
+    categoryId: "",
+    supplierId: ""
+  });
 
   // Update form data when editingProduct changes
   useEffect(() => {
@@ -138,12 +145,55 @@ export default function AddProductModal({
     e.preventDefault()
     setIsLoading(true)
 
+    const newErrors = {
+      name: "",
+      price: "",
+      quantity: "",
+      categoryId: "",
+      supplierId: ""
+    };
+
+    if (!formData.name || formData.name.trim() === "") {
+      newErrors.name = "You have to fill this field";
+    }
+    if (!formData.price || isNaN(Number(formData.price))) {
+      newErrors.price = "You have to fill this field";
+    }
+    if (!formData.quantity || isNaN(Number(formData.quantity))) {
+      newErrors.quantity = "You have to fill this field";
+    }
+    if (!formData.categoryId) {
+      newErrors.categoryId = "You have to fill this field";
+    }
+    if (!formData.supplierId) {
+      newErrors.supplierId = "You have to fill this field";
+    }
+
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).some(Boolean)) {
+      setIsLoading(false);
+      return;
+    }
+
     console.log("formData.categoryId:", formData.categoryId, "formData.supplierId:", formData.supplierId);
     console.log("Available categories:", categories);
     console.log("Available suppliers:", suppliers);
     
+    if (!formData.name || formData.name.trim() === "") {
+      setIsLoading(false)
+      return;
+    }
+    if (!formData.price || isNaN(Number(formData.price))) {
+      setIsLoading(false)
+      return;
+    }
+    if (!formData.quantity || isNaN(Number(formData.quantity))) {
+      setIsLoading(false)
+      return;
+    }
+
     if (!formData.categoryId || !formData.supplierId || formData.categoryId === "" || formData.supplierId === "") {
-      alert("Please select both category and supplier");
       setIsLoading(false)
       return
     }
@@ -214,8 +264,8 @@ export default function AddProductModal({
                 value={formData.name}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange("name", e.target.value)}
                 placeholder="Enter product name"
-                required
               />
+              {errors.name && <div className="text-xs text-red-500 mt-1">{errors.name}</div>}
             </div>
 
             <div className="space-y-2">
@@ -228,8 +278,8 @@ export default function AddProductModal({
                 value={formData.price}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange("price", e.target.value)}
                 placeholder="0.00"
-                required
               />
+              {errors.price && <div className="text-xs text-red-500 mt-1">{errors.price}</div>}
             </div>
           </div>
 
@@ -254,8 +304,8 @@ export default function AddProductModal({
                 value={formData.quantity}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange("quantity", e.target.value)}
                 placeholder="0"
-                required
               />
+              {errors.quantity && <div className="text-xs text-red-500 mt-1">{errors.quantity}</div>}
             </div>
 
             <div className="space-y-2">
@@ -265,7 +315,6 @@ export default function AddProductModal({
                 className="block w-full border rounded px-3 py-2 text-sm"
                 value={formData.categoryId}
                 onChange={e => handleInputChange("categoryId", e.target.value)}
-                required
               >
                 <option value="">Select category</option>
                 {categories.map((category) => (
@@ -274,6 +323,7 @@ export default function AddProductModal({
                   </option>
                 ))}
               </select>
+              {errors.categoryId && <div className="text-xs text-red-500 mt-1">{errors.categoryId}</div>}
             </div>
           </div>
 
@@ -285,7 +335,6 @@ export default function AddProductModal({
                 className="block w-full border rounded px-3 py-2 text-sm"
                 value={formData.supplierId}
                 onChange={e => handleInputChange("supplierId", e.target.value)}
-                required
               >
                 <option value="">Select supplier</option>
                 {suppliers.map((supplier) => (
@@ -294,6 +343,7 @@ export default function AddProductModal({
                   </option>
                 ))}
               </select>
+              {errors.supplierId && <div className="text-xs text-red-500 mt-1">{errors.supplierId}</div>}
             </div>
 
             <div className="space-y-2">

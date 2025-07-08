@@ -10,13 +10,9 @@ import { Label } from "./ui/label"
 import { Checkbox } from "./ui/checkbox"
 import { Eye, EyeOff, Lock, Mail } from "lucide-react"
 import { useAuth } from "../contexts/AuthContext"
+import { useNavigate } from "react-router-dom"
 
-interface LoginPageProps {
-  onLoginSuccess?: () => void
-  onGoBack?: () => void
-}
-
-export default function LoginPage({ onLoginSuccess, onGoBack }: LoginPageProps) {
+export default function LoginPage() {
   const { login } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState("")
@@ -24,6 +20,7 @@ export default function LoginPage({ onLoginSuccess, onGoBack }: LoginPageProps) 
   const [rememberMe, setRememberMe] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+  const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,7 +30,7 @@ export default function LoginPage({ onLoginSuccess, onGoBack }: LoginPageProps) 
     try {
       const success = await login(email, password)
       if (success) {
-        onLoginSuccess?.()
+        navigate("/admin/products")
       }
     } catch (error) {
       setError(error instanceof Error ? error.message : "Login failed")
@@ -120,11 +117,9 @@ export default function LoginPage({ onLoginSuccess, onGoBack }: LoginPageProps) 
           </form>
 
           <div className="mt-4 text-center space-y-2">
-            {onGoBack && (
-              <Button variant="link" className="text-sm text-muted-foreground" onClick={onGoBack}>
-                ← Back to Products
-              </Button>
-            )}
+            <Button variant="link" className="text-sm text-muted-foreground" onClick={() => navigate("/products") }>
+              ← Back to Products
+            </Button>
             <Button variant="link" className="text-sm text-muted-foreground">
               Forgot your password?
             </Button>

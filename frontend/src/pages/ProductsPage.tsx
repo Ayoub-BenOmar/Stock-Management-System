@@ -4,24 +4,21 @@ import CategoryFilter from "../components/category-filter"
 import ProductsGrid from "../components/products-grid"
 import CartModal from "../components/cart-modal"
 import type { Product } from "../components/ProductCard"
+import { useNavigate } from "react-router-dom"
 
 interface Category {
   id: number
   name: string
 }
 
-interface ProductsPageProps {
-  onGoToWishlist?: () => void
-  onGoToLogin?: () => void
-}
-
-export default function ProductsPage({ onGoToWishlist, onGoToLogin }: ProductsPageProps) {
+export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [selectedCategories, setSelectedCategories] = useState<number[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [loading, setLoading] = useState(true)
   const [isCartModalOpen, setIsCartModalOpen] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,7 +73,7 @@ export default function ProductsPage({ onGoToWishlist, onGoToLogin }: ProductsPa
   })
 
   const handleSignIn = () => {
-    alert("Sign in clicked!")
+    navigate("/login")
   }
 
   const handleCartClick = () => {
@@ -87,14 +84,18 @@ export default function ProductsPage({ onGoToWishlist, onGoToLogin }: ProductsPa
     setIsCartModalOpen(false)
   }
 
+  const handleGoToWishlist = () => {
+    navigate("/wishlist")
+  }
+
   return (
     <div>
       <PageHeader
-        onSignIn={onGoToLogin || handleSignIn}
+        onSignIn={handleSignIn}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onCartClick={handleCartClick}
-        onGoToWishlist={onGoToWishlist}
+        onGoToWishlist={handleGoToWishlist}
       />
       <CategoryFilter
         categories={categories}
