@@ -18,40 +18,41 @@ export default function PageHeader({ onSignIn, searchQuery, onSearchChange, onCa
   const cartItemCount = getCartItemCount()
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-red-200 bg-red-700 text-white backdrop-blur supports-[backdrop-filter]:bg-red-700/95">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold">ProductStore</h1>
+            <img src={require("../assets/logo.png")} alt="Logo" className="h-12 w-auto mr-2" />
+            <h1 className="text-2xl font-bold text-white">ProductStore</h1>
           </div>
 
           <div className="flex-1 max-w-md">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-red-400" />
               <Input
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSearchChange(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-white/90 border-white/20 focus:border-white/40 focus:ring-red-300"
               />
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <Button onClick={onGoToWishlist} variant="outline" className="relative">
+            <Button onClick={onGoToWishlist} variant="outline" className="relative bg-white/10 border-white/20 text-white hover:bg-white/20">
               <Heart className="h-4 w-4 mr-2" />
               Wishlist
             </Button>
-            <Button onClick={onCartClick} variant="outline" className="relative">
+            <Button onClick={onCartClick} variant="outline" className="relative bg-white/10 border-white/20 text-white hover:bg-white/20">
               <ShoppingCart className="h-4 w-4 mr-2" />
               Cart
               {cartItemCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-2 -right-2 bg-white text-red-600 text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
                   {cartItemCount}
                 </span>
               )}
             </Button>
-            <Button onClick={onSignIn} className="flex items-center gap-2">
+            <Button onClick={onSignIn} className="flex items-center gap-2 bg-white text-red-600 hover:bg-gray-100">
               <User className="h-4 w-4" />
               Sign In
             </Button>

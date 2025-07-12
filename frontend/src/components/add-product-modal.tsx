@@ -66,6 +66,10 @@ export default function AddProductModal({
     categoryId: "",
     supplierId: ""
   });
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState("")
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string>("")
 
   // Update form data when editingProduct changes
   useEffect(() => {
@@ -79,6 +83,9 @@ export default function AddProductModal({
         categoryId: editingProduct.category?.id?.toString() || "",
         supplierId: editingProduct.supplier?.id?.toString() || "",
       })
+      if (editingProduct.pic) {
+        setImagePreview(`http://localhost:3000${editingProduct.pic}`)
+      }
     } else {
       // Reset form when not editing
       setFormData({
@@ -90,6 +97,8 @@ export default function AddProductModal({
         categoryId: "",
         supplierId: "",
       })
+      setSelectedFile(null)
+      setImagePreview("")
     }
   }, [editingProduct, open])
 
@@ -176,10 +185,6 @@ export default function AddProductModal({
       return;
     }
 
-    console.log("formData.categoryId:", formData.categoryId, "formData.supplierId:", formData.supplierId);
-    console.log("Available categories:", categories);
-    console.log("Available suppliers:", suppliers);
-    
     if (!formData.name || formData.name.trim() === "") {
       setIsLoading(false)
       return;
@@ -201,38 +206,28 @@ export default function AddProductModal({
     const selectedCategory = categories.find((c) => c.id.toString() === formData.categoryId.toString())
     const selectedSupplier = suppliers.find((s) => s.id.toString() === formData.supplierId.toString())
 
-    console.log("Selected category:", selectedCategory);
-    console.log("Selected supplier:", selectedSupplier);
-
     if (!selectedCategory || !selectedSupplier) {
       alert("Please select both category and supplier")
       setIsLoading(false)
       return
     }
 
-    const payload = {
-      name: formData.name,
-      description: formData.description || null,
-      price: Number(formData.price),
-      quantity: Number(formData.quantity),
-      active: Boolean(formData.active),
-      categoryId: Number(formData.categoryId),
-      supplierId: Number(formData.supplierId),
-    };
-
-    if (editingProduct) {
-      await fetch(`http://localhost:3000/api/products/${editingProduct.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-    } else {
-      await fetch("http://localhost:3000/api/products", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+    // Create FormData for file upload
+    const formDataToSend = new FormData()
+    formDataToSend.append("name", formData.name)
+    formDataToSend.append("description", formData.description || "")
+    formDataToSend.append("price", formData.price)
+    formDataToSend.append("quantity", formData.quantity)
+    formDataToSend.append("categoryId", formData.categoryId)
+    formDataToSend.append("supplierId", formData.supplierId)
+    formDataToSend.append("active", formData.active.toString())
+    
+    if (selectedFile) {
+      formDataToSend.append("pic", selectedFile)
     }
+
+    // Call the onSubmit function with the FormData
+    await onSubmit(formDataToSend as any)
 
     // Simulate API call
     setTimeout(() => {
@@ -243,6 +238,21 @@ export default function AddProductModal({
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setSelectedFile(file)
+      setUploadError("")
+      
+      // Create preview
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
   }
 
   return (
@@ -292,6 +302,23 @@ export default function AddProductModal({
               placeholder="Enter product description"
               rows={3}
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="image">Product Image</Label>
+            <Input
+              id="image"
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="cursor-pointer"
+            />
+            {uploadError && <div className="text-xs text-red-500 mt-1">{uploadError}</div>}
+            {imagePreview && (
+              <div className="mt-2">
+                <img src={imagePreview} alt="Preview" className="h-20 w-20 object-cover rounded border" />
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">

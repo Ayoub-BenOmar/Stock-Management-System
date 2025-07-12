@@ -22,6 +22,7 @@ export interface Product {
     id: number
     name: string
   }
+  pic?: string
 }
 
 interface ProductCardProps {
@@ -60,7 +61,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <CardHeader className="p-0">
         <div className="relative">
           <img
-            src="/placeholder.svg"
+            src={product.pic ? `http://localhost:3000${product.pic}` : "/placeholder.svg"}
             alt={product.name}
             className="w-full h-48 object-cover"
           />
@@ -77,23 +78,24 @@ export default function ProductCard({ product }: ProductCardProps) {
               </Badge>
             </div>
           )}
-          <div className="absolute top-2 right-2">
-            <Button
-              variant={inWishlist ? "default" : "outline"}
-              size="icon"
-              onClick={handleWishlistClick}
-              className={inWishlist ? "text-red-500" : ""}
-            >
-              <Heart className={inWishlist ? "h-5 w-5 fill-current" : "h-5 w-5"} />
-              <span className="sr-only">{inWishlist ? "Remove from wishlist" : "Add to wishlist"}</span>
-            </Button>
-          </div>
+
         </div>
       </CardHeader>
 
       <CardContent className="p-4">
         <div className="space-y-2">
-          <h3 className="font-semibold text-lg line-clamp-2 leading-tight">{product.name}</h3>
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-semibold text-lg line-clamp-2 leading-tight flex-1">{product.name}</h3>
+            <button
+              onClick={handleWishlistClick}
+              className={`flex-shrink-0 p-1 hover:scale-110 transition-transform ${
+                inWishlist ? "text-red-500" : "text-gray-400 hover:text-red-500"
+              }`}
+            >
+              <Heart className={`h-5 w-5 ${inWishlist ? "fill-current" : ""}`} />
+              <span className="sr-only">{inWishlist ? "Remove from wishlist" : "Add to wishlist"}</span>
+            </button>
+          </div>
 
           {product.description && <p className="text-sm text-muted-foreground line-clamp-2">{product.description}</p>}
 

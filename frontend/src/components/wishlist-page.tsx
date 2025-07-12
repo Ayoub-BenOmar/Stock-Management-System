@@ -83,25 +83,27 @@ export default function WishlistPage() {
       />
 
       <main className="container mx-auto px-4 py-8">
-        <div className="flex justify-end mb-6">
-          <button
-            onClick={handleClearAll}
-            className="px-4 py-2 text-red-600 hover:text-red-700 bg-transparent border border-red-600 hover:border-red-700 rounded-md text-sm transition-colors"
-          >
-            Clear All
-          </button>
-        </div>
+        <div className="p-6 border rounded-lg bg-white shadow-sm">
+          <div className="flex justify-end mb-6">
+            <button
+              onClick={handleClearAll}
+              className="px-4 py-2 text-red-600 hover:text-red-700 bg-transparent border border-red-600 hover:border-red-700 rounded-md text-sm transition-colors"
+            >
+              Clear All
+            </button>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {wishlistItems.filter(item => item && item.product && item.product.id !== undefined).map((item) => (
-            <WishlistProductCard
-              key={item.product.id}
-              product={item.product}
-              addedToWishlistAt={item.addedAt}
-              onRemoveFromWishlist={handleRemoveFromWishlist}
-              onAddToCart={handleAddToCart}
-            />
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {wishlistItems.filter(item => item && item.product && item.product.id !== undefined).map((item) => (
+              <WishlistProductCard
+                key={item.product.id}
+                product={item.product}
+                addedToWishlistAt={item.addedAt}
+                onRemoveFromWishlist={handleRemoveFromWishlist}
+                onAddToCart={handleAddToCart}
+              />
+            ))}
+          </div>
         </div>
       </main>
       <CartModal isOpen={isCartModalOpen} onClose={handleCloseCartModal} />

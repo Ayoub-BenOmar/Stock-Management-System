@@ -105,7 +105,9 @@ export default function ProductsPage() {
         productCount={filteredProducts.length}
       />
       <main className="container mx-auto px-4 py-8">
-        <ProductsGrid products={filteredProducts} isLoading={loading} />
+        <div className="p-6 border rounded-lg bg-white shadow-sm">
+          <ProductsGrid products={filteredProducts} isLoading={loading} />
+        </div>
       </main>
       <CartModal isOpen={isCartModalOpen} onClose={handleCloseCartModal} />
     </div>

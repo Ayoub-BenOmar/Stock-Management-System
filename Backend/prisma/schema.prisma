@@ -37,6 +37,7 @@ model Product {
   price        Decimal          @db.Decimal(10, 2)
   quantity     Int              @default(0)
   active       Boolean          @default(true)
+  pic          String?          @db.VarChar(255) // Product image URL
   createdAt    DateTime         @default(now()) @map("created_at")
   updatedAt    DateTime         @updatedAt @map("updated_at")
   categoryId   Int              @map("category_id")

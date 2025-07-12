@@ -24,6 +24,21 @@ export default function CategoryFilter({
   onClearFilters,
   productCount,
 }: CategoryFilterProps) {
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const categoryId = parseInt(event.target.value)
+    if (categoryId) {
+      onCategoryToggle(categoryId)
+      // Reset select to placeholder
+      event.target.value = ""
+    }
+  }
+
+  const getSelectedCategoryNames = () => {
+    return categories
+      .filter(category => selectedCategories.includes(category.id))
+      .map(category => category.name)
+  }
+
   return (
     <div className="bg-muted/50 border-b">
       <div className="container mx-auto px-4 py-4">
@@ -38,34 +53,63 @@ export default function CategoryFilter({
             )}
           </div>
 
-          <div className="flex flex-wrap gap-2">
-            {categories.filter(category => category && category.id !== undefined).map((category) => {
-              const isSelected = selectedCategories.includes(category.id)
-              return (
-                <Button
-                  key={category.id}
-                  variant={isSelected ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => onCategoryToggle(category.id)}
-                  className="transition-all duration-200 h-8 px-3"
-                >
-                  {category.name}
-                  {isSelected && <X className="h-3 w-3 ml-1" />}
-                </Button>
-              )
-            })}
+          <div className="flex items-center gap-3">
+            <div>
+              <select
+                onChange={handleSelectChange}
+                className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white text-gray-900 min-w-[200px]"
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Select categories...
+                </option>
+                {categories.filter(category => category && category.id !== undefined).map((category) => {
+                  const isSelected = selectedCategories.includes(category.id)
+                  return (
+                    <option
+                      key={category.id}
+                      value={category.id}
+                      className={isSelected ? 'bg-red-50 text-red-700' : ''}
+                    >
+                      {category.name}
+                    </option>
+                  )
+                })}
+              </select>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="text-sm">
+                {productCount} {productCount === 1 ? "product" : "products"} found
+              </Badge>
+              {selectedCategories.length > 0 && (
+                <span className="text-sm text-muted-foreground">
+                  in {selectedCategories.length} {selectedCategories.length === 1 ? "category" : "categories"}
+                </span>
+              )}
+            </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Badge variant="secondary" className="text-sm">
-              {productCount} {productCount === 1 ? "product" : "products"} found
-            </Badge>
-            {selectedCategories.length > 0 && (
-              <span className="text-sm text-muted-foreground">
-                in {selectedCategories.length} {selectedCategories.length === 1 ? "category" : "categories"}
-              </span>
-            )}
-          </div>
+          {/* Selected Categories Display */}
+          {selectedCategories.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {getSelectedCategoryNames().map((name, index) => (
+                <Badge key={index} variant="secondary" className="bg-red-100 text-red-800">
+                  {name}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-4 w-4 p-0 ml-1 hover:bg-red-200"
+                    onClick={() => {
+                      const category = categories.find(c => c.name === name)
+                      if (category) onCategoryToggle(category.id)
+                    }}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </Badge>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

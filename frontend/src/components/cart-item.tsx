@@ -43,11 +43,11 @@ export default function CartItemComponent({ item, onQuantityChange, onRemove }: 
       <CardContent className="p-4">
         <div className="flex gap-4">
           {/* Product Image */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 w-[70%]">
             <img
-              src="/placeholder.svg"
+              src={product.pic ? `http://localhost:3000${product.pic}` : "/placeholder.svg"}
               alt={product.name}
-              className="w-30 h-30 rounded-lg object-cover"
+              className="w-full h-full rounded-lg object-cover"
             />
           </div>
 
@@ -75,39 +75,35 @@ export default function CartItemComponent({ item, onQuantityChange, onRemove }: 
               <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{product.description}</p>
             )}
 
-            <div className="flex items-center justify-between">
-              {/* Quantity Controls */}
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Qty:</span>
-                <div className="flex items-center border rounded-lg">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={handleQuantityDecrease}
-                    disabled={isMinQuantity}
-                  >
-                    <Minus className="h-3 w-3" />
-                  </Button>
-                  <span className="px-3 py-1 text-sm font-medium min-w-[2rem] text-center">{quantity}</span>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={handleQuantityIncrease}
-                    disabled={isMaxQuantity}
-                  >
-                    <Plus className="h-3 w-3" />
-                  </Button>
-                </div>
-                {isMaxQuantity && <span className="text-xs text-orange-600">Max available: {product.quantity}</span>}
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">Qty:</span>
+              <div className="flex items-center border rounded-lg">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={handleQuantityDecrease}
+                  disabled={isMinQuantity}
+                >
+                  <Minus className="h-3 w-3" />
+                </Button>
+                <span className="px-3 py-1 text-sm font-medium min-w-[2rem] text-center">{quantity}</span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={handleQuantityIncrease}
+                  disabled={isMaxQuantity}
+                >
+                  <Plus className="h-3 w-3" />
+                </Button>
               </div>
-
-              {/* Price */}
-              <div className="text-right">
-                <div className="text-sm text-muted-foreground">{formatPrice(product.price)} each</div>
-                <div className="text-lg font-bold">{formatPrice(itemTotal)}</div>
-              </div>
+              {isMaxQuantity && <span className="text-xs text-orange-600">Max available: {product.quantity}</span>}
+            </div>
+            {/* Price below quantity controls */}
+            <div className="mt-2">
+              <div className="text-sm text-muted-foreground">{formatPrice(product.price)} each</div>
+              <div className="text-lg font-bold">{formatPrice(itemTotal)}</div>
             </div>
           </div>
         </div>

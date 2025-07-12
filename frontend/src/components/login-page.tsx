@@ -30,7 +30,7 @@ export default function LoginPage() {
     try {
       const success = await login(email, password)
       if (success) {
-        navigate("/admin/products")
+        navigate("/admin/dashboard")
       }
     } catch (error) {
       setError(error instanceof Error ? error.message : "Login failed")

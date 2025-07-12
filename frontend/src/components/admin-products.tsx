@@ -14,6 +14,7 @@ import { Label } from "./ui/label"
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>([])
   const [suppliers, setSuppliers] = useState<{ id: number; name: string }[]>([])
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
@@ -37,14 +38,20 @@ export default function AdminProductsPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [productsRes, suppliersRes] = await Promise.all([
+        const [productsRes, categoriesRes, suppliersRes] = await Promise.all([
           fetch("http://localhost:3000/api/products"),
+          fetch("http://localhost:3000/api/categories"),
           fetch("http://localhost:3000/api/suppliers"),
         ])
         
         if (productsRes.ok) {
           const productsData = await productsRes.json()
           setProducts(productsData)
+        }
+        
+        if (categoriesRes.ok) {
+          const categoriesData = await categoriesRes.json()
+          setCategories(categoriesData)
         }
         
         if (suppliersRes.ok) {
@@ -85,27 +92,42 @@ export default function AdminProductsPage() {
     }
   }
 
-  const handleEditProduct = async (productData: Omit<Product, "id" | "createdAt" | "updatedAt">) => {
+  const handleEditProduct = async (productData: any) => {
     if (!editingProduct) return
 
     try {
       const token = localStorage.getItem('token')
+      
+      // Check if productData is FormData (for file uploads) or regular object
+      const isFormData = productData instanceof FormData
+      
+      console.log("Update product data:", productData)
+      console.log("Is FormData:", isFormData)
+      console.log("Editing product ID:", editingProduct.id)
+      
       const response = await fetch(`http://localhost:3000/api/products/${editingProduct.id}`, {
         method: "PUT",
-        headers: {
+        headers: isFormData ? {
+          "Authorization": `Bearer ${token}`,
+        } : {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify(productData),
+        body: isFormData ? productData : JSON.stringify(productData),
       })
+
+      console.log("Response status:", response.status)
+      console.log("Response ok:", response.ok)
 
       if (response.ok) {
         const updatedProduct = await response.json()
+        console.log("Updated product:", updatedProduct)
         setProducts((prev) => prev.map((p) => (p.id === editingProduct.id ? updatedProduct : p)))
         setEditingProduct(null)
         setIsAddModalOpen(false)
       } else {
         const error = await response.json()
+        console.error("Update error response:", error)
         alert(`Error updating product: ${error.error}`)
       }
     } catch (error) {
@@ -146,7 +168,7 @@ export default function AdminProductsPage() {
   return (
     <div className="flex h-screen">
       <AdminSidebar activeItem="products" />
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col ml-64">
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-semibold">Products Management</h1>
@@ -173,6 +195,7 @@ export default function AdminProductsPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead>Image</TableHead>
                       <TableHead>Name</TableHead>
                       <TableHead>Category</TableHead>
                       <TableHead>Price</TableHead>
@@ -187,6 +210,13 @@ export default function AdminProductsPage() {
                     {Array.isArray(products) && products.filter(Boolean).map((product) => (
                       product && product.id !== undefined && product.category && product.supplier && (
                         <TableRow key={product.id}>
+                          <TableCell>
+                            <img
+                              src={product.pic ? `http://localhost:3000${product.pic}` : "/placeholder.svg"}
+                              alt={product.name}
+                              className="w-14 h-14 object-cover rounded"
+                            />
+                          </TableCell>
                           <TableCell>
                             <div>
                               <div className="font-medium">{product.name}</div>
@@ -264,7 +294,7 @@ export default function AdminProductsPage() {
             if (!open) setEditingProduct(null)
           }}
           onSubmit={editingProduct ? handleEditProduct : handleAddProduct}
-          categories={[]}
+          categories={categories}
           suppliers={suppliers}
           editingProduct={editingProduct}
         />

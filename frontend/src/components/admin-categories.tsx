@@ -110,7 +110,7 @@ export default function AdminCategoriesPage() {
   return (
     <div className="flex h-screen">
       <AdminSidebar activeItem="categories" />
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col ml-64">
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <h1 className="text-xl font-semibold">Category Management</h1>
         </header>

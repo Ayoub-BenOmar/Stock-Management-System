@@ -42,9 +42,9 @@ export default function WishlistProductCard({
       <CardHeader className="p-0">
         <div className="relative">
           <img
-            src="/placeholder.svg"
+            src={product.pic ? `http://localhost:3000${product.pic}` : "/placeholder.svg"}
             alt={product.name}
-            className="w-full h-48 object-cover"
+            className="w-16 h-16 object-cover rounded"
           />
           <div className="absolute top-2 left-2 flex gap-2">
             <Badge variant={product.active ? "default" : "secondary"}>
