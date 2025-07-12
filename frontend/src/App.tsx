@@ -6,7 +6,7 @@ import WishlistPage from "./components/wishlist-page";
 import LoginPage from "./components/login-page";
 import AdminProductsPage from "./components/admin-products";
 import AdminCategoriesPage from "./components/admin-categories";
-import AdminSuppliersPage from "./pages/AdminSuppliersPage";
+import AdminSuppliersPage from "./pages/admin/Suppliers";
 import AdminDashboardPage from "./components/admin-dashboard-page";
 import { CartProvider } from "./contexts/CartContext";
 import { WishlistProvider } from "./contexts/WishlistContext";

@@ -10,12 +10,8 @@ export default function ProductList() {
     const fetchProducts = async () => {
       try {
         setLoading(true)
-        console.log("Fetching products from: http://localhost:3000/api/products")
         
         const response = await fetch("http://localhost:3000/api/products")
-        
-        console.log("Response status:", response.status)
-        console.log("Response headers:", response.headers)
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
@@ -29,7 +25,6 @@ export default function ProductList() {
         }
         
         const data = await response.json()
-        console.log("Products data:", data)
         setProducts(data)
       } catch (err) {
         console.error("Fetch error:", err)

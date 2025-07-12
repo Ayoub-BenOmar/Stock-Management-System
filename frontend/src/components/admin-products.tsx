@@ -101,10 +101,6 @@ export default function AdminProductsPage() {
       // Check if productData is FormData (for file uploads) or regular object
       const isFormData = productData instanceof FormData
       
-      console.log("Update product data:", productData)
-      console.log("Is FormData:", isFormData)
-      console.log("Editing product ID:", editingProduct.id)
-      
       const response = await fetch(`http://localhost:3000/api/products/${editingProduct.id}`, {
         method: "PUT",
         headers: isFormData ? {
@@ -116,12 +112,8 @@ export default function AdminProductsPage() {
         body: isFormData ? productData : JSON.stringify(productData),
       })
 
-      console.log("Response status:", response.status)
-      console.log("Response ok:", response.ok)
-
       if (response.ok) {
         const updatedProduct = await response.json()
-        console.log("Updated product:", updatedProduct)
         setProducts((prev) => prev.map((p) => (p.id === editingProduct.id ? updatedProduct : p)))
         setEditingProduct(null)
         setIsAddModalOpen(false)

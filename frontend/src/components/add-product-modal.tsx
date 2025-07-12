@@ -15,7 +15,6 @@ import {
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
 import { Textarea } from "./ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { Switch } from "./ui/switch"
 import type { Product } from "./ProductCard"
 
@@ -71,7 +70,6 @@ export default function AddProductModal({
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string>("")
 
-  // Update form data when editingProduct changes
   useEffect(() => {
     if (editingProduct) {
       setFormData({
@@ -87,7 +85,6 @@ export default function AddProductModal({
         setImagePreview(`http://localhost:3000${editingProduct.pic}`)
       }
     } else {
-      // Reset form when not editing
       setFormData({
         name: "",
         description: "",
@@ -103,11 +100,9 @@ export default function AddProductModal({
   }, [editingProduct, open])
 
   useEffect(() => {
-    // Use provided categories first, then fetch if needed
     if (initialCategories && initialCategories.length > 0) {
       setCategories(initialCategories)
     } else {
-      // Fetch categories
       const fetchCategories = async () => {
         try {
           const res = await fetch("http://localhost:3000/api/categories");
@@ -127,11 +122,9 @@ export default function AddProductModal({
   }, [initialCategories]);
 
   useEffect(() => {
-    // Use provided suppliers first, then fetch if needed
     if (initialSuppliers && initialSuppliers.length > 0) {
       setSuppliers(initialSuppliers)
     } else {
-      // Fetch suppliers
       const fetchSuppliers = async () => {
         try {
           const res = await fetch("http://localhost:3000/api/suppliers");
@@ -212,7 +205,6 @@ export default function AddProductModal({
       return
     }
 
-    // Create FormData for file upload
     const formDataToSend = new FormData()
     formDataToSend.append("name", formData.name)
     formDataToSend.append("description", formData.description || "")
@@ -226,10 +218,8 @@ export default function AddProductModal({
       formDataToSend.append("pic", selectedFile)
     }
 
-    // Call the onSubmit function with the FormData
     await onSubmit(formDataToSend as any)
 
-    // Simulate API call
     setTimeout(() => {
       setIsLoading(false)
       onOpenChange(false)
@@ -246,7 +236,6 @@ export default function AddProductModal({
       setSelectedFile(file)
       setUploadError("")
       
-      // Create preview
       const reader = new FileReader()
       reader.onload = (e) => {
         setImagePreview(e.target?.result as string)

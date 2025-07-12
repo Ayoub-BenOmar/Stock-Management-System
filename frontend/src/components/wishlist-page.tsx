@@ -23,9 +23,6 @@ export default function WishlistPage() {
     const product = wishlistItems.find(item => item.product.id === productId)?.product
     if (product) {
       addToCart(product, 1)
-      // Optional: Show a brief success message
-      // You could replace this with a toast notification in a real app
-      console.log(`Added ${product.name} to cart!`)
     }
   }
 

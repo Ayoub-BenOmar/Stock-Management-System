@@ -37,7 +37,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      console.log('Attempting login with email:', email)
       
       const response = await fetch('http://localhost:3000/api/users/login', {
         method: 'POST',
@@ -47,12 +46,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         body: JSON.stringify({ email, password }),
       })
 
-      console.log('Response status:', response.status)
-      console.log('Response ok:', response.ok)
-
       if (response.ok) {
         const data = await response.json()
-        console.log('Response data:', data)
         
         if (!data.id || !data.token) {
           console.error('Invalid response format:', data)
@@ -66,7 +61,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           role: data.role,
         }
         
-        console.log('Setting user data:', userData)
         setUser(userData)
         localStorage.setItem('user', JSON.stringify(userData))
         localStorage.setItem('token', data.token)
