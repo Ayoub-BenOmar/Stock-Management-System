@@ -67,16 +67,22 @@ export default function AdminProductsPage() {
     fetchData()
   }, [])
 
-  const handleAddProduct = async (productData: Omit<Product, "id" | "createdAt" | "updatedAt">) => {
+  const handleAddProduct = async (productData: any) => {
     try {
       const token = localStorage.getItem('token')
+      
+      // Check if productData is FormData (for file uploads) or regular object
+      const isFormData = productData instanceof FormData
+      
       const response = await fetch("http://localhost:3000/api/products", {
         method: "POST",
-        headers: {
+        headers: isFormData ? {
+          "Authorization": `Bearer ${token}`,
+        } : {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify(productData),
+        body: isFormData ? productData : JSON.stringify(productData),
       })
 
       if (response.ok) {

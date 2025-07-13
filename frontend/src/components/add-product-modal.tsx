@@ -31,7 +31,7 @@ interface Supplier {
 interface AddProductModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onSubmit: (product: Omit<Product, "id" | "createdAt" | "updatedAt">) => void
+  onSubmit: (product: any) => void
   categories: Category[]
   suppliers: Supplier[]
   editingProduct?: Product | null
