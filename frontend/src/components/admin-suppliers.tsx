@@ -234,14 +234,25 @@ export default function AdminSuppliersPage() {
                           <TableCell className="hidden lg:table-cell">{new Date(sup.createdAt).toLocaleDateString()}</TableCell>
                           <TableCell className="hidden xl:table-cell">{new Date(sup.updatedAt).toLocaleDateString()}</TableCell>
                           <TableCell>
-                            <div className="flex gap-2">
-                              <Button size="icon" variant="ghost" onClick={() => startEdit(sup)}>
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button size="icon" variant="ghost" onClick={() => handleDelete(sup.id)}>
-                                <Trash2 className="h-4 w-4 text-red-600" />
-                              </Button>
-                            </div>
+                            {editId === sup.id ? (
+                              <div className="flex gap-2">
+                                <Button size="icon" variant="ghost" onClick={() => handleEdit(sup.id)} disabled={editLoading}>
+                                  <Check className="h-4 w-4 text-green-600" />
+                                </Button>
+                                <Button size="icon" variant="ghost" onClick={cancelEdit}>
+                                  <X className="h-4 w-4 text-red-600" />
+                                </Button>
+                              </div>
+                            ) : (
+                              <div className="flex gap-2">
+                                <Button size="icon" variant="ghost" onClick={() => startEdit(sup)}>
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button size="icon" variant="ghost" onClick={() => handleDelete(sup.id)}>
+                                  <Trash2 className="h-4 w-4 text-red-600" />
+                                </Button>
+                              </div>
+                            )}
                           </TableCell>
                         </TableRow>
                       ))
