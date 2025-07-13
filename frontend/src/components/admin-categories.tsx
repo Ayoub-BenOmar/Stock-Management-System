@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "./ui/
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "./ui/table";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Edit, Trash2, Check, X } from "lucide-react";
+import { Edit, Trash2, Check, X, Menu } from "lucide-react";
 import AdminSidebar from "./admin-sidebar";
 
 interface Category {
@@ -22,6 +22,7 @@ export default function AdminCategoriesPage() {
   const [editId, setEditId] = useState<number | null>(null);
   const [editName, setEditName] = useState("");
   const [editLoading, setEditLoading] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchCategories();
@@ -109,9 +110,12 @@ export default function AdminCategoriesPage() {
 
   return (
     <div className="flex h-screen">
-      <AdminSidebar activeItem="categories" />
-      <div className="flex-1 flex flex-col ml-64">
+      <AdminSidebar activeItem="categories" open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex-1 flex flex-col md:ml-64">
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+          <button className="md:hidden mr-2" onClick={() => setSidebarOpen(true)}>
+            <Menu className="h-6 w-6" />
+          </button>
           <h1 className="text-xl font-semibold">Category Management</h1>
         </header>
         <div className="flex-1 space-y-4 p-4">
@@ -121,26 +125,27 @@ export default function AdminCategoriesPage() {
               <CardDescription>Manage your product categories</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex gap-2 mb-6">
+              <div className="flex flex-col sm:flex-row gap-2 mb-6">
                 <Input
                   placeholder="Add new category"
                   value={newCategory}
                   onChange={e => setNewCategory(e.target.value)}
                   onKeyDown={e => { if (e.key === "Enter") handleAddCategory(); }}
                   disabled={adding}
+                  className="flex-1"
                 />
-                <Button onClick={handleAddCategory} disabled={adding || !newCategory.trim()}>
+                <Button onClick={handleAddCategory} disabled={adding || !newCategory.trim()} className="w-full sm:w-auto">
                   Add
                 </Button>
               </div>
               {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
-              <div className="rounded-md border">
+              <div className="rounded-md border overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Name</TableHead>
-                      <TableHead>Created</TableHead>
-                      <TableHead>Updated</TableHead>
+                      <TableHead className="hidden md:table-cell">Created</TableHead>
+                      <TableHead className="hidden lg:table-cell">Updated</TableHead>
                       <TableHead className="w-[100px]">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -162,7 +167,7 @@ export default function AdminCategoriesPage() {
                                 <Input
                                   value={editName}
                                   onChange={e => setEditName(e.target.value)}
-                                  className="h-8"
+                                  className="h-8 flex-1"
                                   disabled={editLoading}
                                 />
                                 <Button size="icon" variant="ghost" onClick={() => handleEdit(cat.id)} disabled={editLoading}>
@@ -176,8 +181,8 @@ export default function AdminCategoriesPage() {
                               <span>{cat.name}</span>
                             )}
                           </TableCell>
-                          <TableCell>{new Date(cat.createdAt).toLocaleDateString()}</TableCell>
-                          <TableCell>{new Date(cat.updatedAt).toLocaleDateString()}</TableCell>
+                          <TableCell className="hidden md:table-cell">{new Date(cat.createdAt).toLocaleDateString()}</TableCell>
+                          <TableCell className="hidden lg:table-cell">{new Date(cat.updatedAt).toLocaleDateString()}</TableCell>
                           <TableCell>
                             <div className="flex gap-2">
                               <Button size="icon" variant="ghost" onClick={() => startEdit(cat)}>

@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "./ui/
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "./ui/table";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Edit, Trash2, Check, X, Plus } from "lucide-react";
+import { Edit, Trash2, Check, X, Plus, Menu } from "lucide-react";
 import AdminSidebar from "./admin-sidebar";
 
 interface Supplier {
@@ -26,6 +26,7 @@ export default function AdminSuppliersPage() {
   const [editId, setEditId] = useState<number | null>(null);
   const [editSupplier, setEditSupplier] = useState({ name: "", email: "", phone: "", address: "" });
   const [editLoading, setEditLoading] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchSuppliers();
@@ -129,36 +130,39 @@ export default function AdminSuppliersPage() {
 
   return (
     <div className="flex h-screen">
-      <AdminSidebar activeItem="suppliers" />
-      <div className="flex-1 flex flex-col ml-64">
+      <AdminSidebar activeItem="suppliers" open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex-1 flex flex-col md:ml-64">
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+          <button className="md:hidden mr-2" onClick={() => setSidebarOpen(true)}>
+            <Menu className="h-6 w-6" />
+          </button>
           <h1 className="text-xl font-semibold">Supplier Management</h1>
         </header>
         <div className="flex-1 space-y-4 p-4">
           <Card className="w-full">
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                   <CardTitle>Suppliers</CardTitle>
                   <CardDescription>Manage your suppliers</CardDescription>
                 </div>
-                <Button onClick={() => setModalOpen(true)}>
+                <Button onClick={() => setModalOpen(true)} className="w-full sm:w-auto">
                   <Plus className="h-4 w-4 mr-2" /> Add Supplier
                 </Button>
               </div>
             </CardHeader>
             <CardContent>
               {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
-              <div className="rounded-md border">
+              <div className="rounded-md border overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Phone</TableHead>
-                      <TableHead>Address</TableHead>
-                      <TableHead>Created</TableHead>
-                      <TableHead>Updated</TableHead>
+                      <TableHead className="hidden md:table-cell">Email</TableHead>
+                      <TableHead className="hidden lg:table-cell">Phone</TableHead>
+                      <TableHead className="hidden xl:table-cell">Address</TableHead>
+                      <TableHead className="hidden lg:table-cell">Created</TableHead>
+                      <TableHead className="hidden xl:table-cell">Updated</TableHead>
                       <TableHead className="w-[100px]">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -183,10 +187,15 @@ export default function AdminSuppliersPage() {
                                 disabled={editLoading}
                               />
                             ) : (
-                              <span>{sup.name}</span>
+                              <div>
+                                <span className="font-medium">{sup.name}</span>
+                                <div className="md:hidden text-sm text-muted-foreground mt-1">
+                                  {sup.email}
+                                </div>
+                              </div>
                             )}
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden md:table-cell">
                             {editId === sup.id ? (
                               <Input
                                 value={editSupplier.email}
@@ -198,7 +207,7 @@ export default function AdminSuppliersPage() {
                               <span>{sup.email}</span>
                             )}
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden lg:table-cell">
                             {editId === sup.id ? (
                               <Input
                                 value={editSupplier.phone}
@@ -210,7 +219,7 @@ export default function AdminSuppliersPage() {
                               <span>{sup.phone}</span>
                             )}
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden xl:table-cell">
                             {editId === sup.id ? (
                               <Input
                                 value={editSupplier.address}
@@ -219,32 +228,19 @@ export default function AdminSuppliersPage() {
                                 disabled={editLoading}
                               />
                             ) : (
-                              <span>{sup.address}</span>
+                              <span>{sup.address || "-"}</span>
                             )}
                           </TableCell>
-                          <TableCell>{new Date(sup.createdAt).toLocaleDateString()}</TableCell>
-                          <TableCell>{new Date(sup.updatedAt).toLocaleDateString()}</TableCell>
+                          <TableCell className="hidden lg:table-cell">{new Date(sup.createdAt).toLocaleDateString()}</TableCell>
+                          <TableCell className="hidden xl:table-cell">{new Date(sup.updatedAt).toLocaleDateString()}</TableCell>
                           <TableCell>
                             <div className="flex gap-2">
-                              {editId === sup.id ? (
-                                <>
-                                  <Button size="icon" variant="ghost" onClick={() => handleEdit(sup.id)} disabled={editLoading}>
-                                    <Check className="h-4 w-4 text-green-600" />
-                                  </Button>
-                                  <Button size="icon" variant="ghost" onClick={cancelEdit}>
-                                    <X className="h-4 w-4 text-red-600" />
-                                  </Button>
-                                </>
-                              ) : (
-                                <>
-                                  <Button size="icon" variant="ghost" onClick={() => startEdit(sup)}>
-                                    <Edit className="h-4 w-4" />
-                                  </Button>
-                                  <Button size="icon" variant="ghost" onClick={() => handleDelete(sup.id)}>
-                                    <Trash2 className="h-4 w-4 text-red-600" />
-                                  </Button>
-                                </>
-                              )}
+                              <Button size="icon" variant="ghost" onClick={() => startEdit(sup)}>
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button size="icon" variant="ghost" onClick={() => handleDelete(sup.id)}>
+                                <Trash2 className="h-4 w-4 text-red-600" />
+                              </Button>
                             </div>
                           </TableCell>
                         </TableRow>

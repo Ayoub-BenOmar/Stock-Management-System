@@ -50,7 +50,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -60,8 +60,8 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
       {/* Modal */}
       <div className="relative bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-2xl font-bold">Shopping Cart</h2>
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b">
+          <h2 className="text-xl sm:text-2xl font-bold">Shopping Cart</h2>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="h-5 w-5" />
           </Button>
@@ -70,7 +70,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
         {/* Content */}
         <div className="flex flex-col lg:flex-row h-[calc(90vh-120px)]">
           {/* Cart Items */}
-          <div className="flex-1 overflow-y-auto p-6">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6">
             {cartItems.length === 0 ? (
               <EmptyCart onContinueShopping={handleContinueShopping} />
             ) : (
@@ -89,7 +89,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
 
           {/* Cart Summary */}
           {cartItems.length > 0 && (
-            <div className="lg:w-80 border-l p-6">
+            <div className="lg:w-80 border-t lg:border-l lg:border-t-0 p-4 sm:p-6">
               <CartSummaryComponent
                 summary={cartSummary}
                 onCheckout={handleCheckout}

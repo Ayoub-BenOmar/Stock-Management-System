@@ -43,21 +43,21 @@ export default function CategoryFilter({
     <div className="bg-muted/50 border-b">
       <div className="container mx-auto px-4 py-4">
         <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <h2 className="text-lg font-semibold">Filter by Category</h2>
             {selectedCategories.length > 0 && (
-              <Button variant="ghost" size="sm" onClick={onClearFilters} className="text-muted-foreground">
+              <Button variant="ghost" size="sm" onClick={onClearFilters} className="text-muted-foreground w-full sm:w-auto">
                 <X className="h-4 w-4 mr-1" />
                 Clear filters
               </Button>
             )}
           </div>
 
-          <div className="flex items-center gap-3">
-            <div>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <div className="w-full sm:w-auto">
               <select
                 onChange={handleSelectChange}
-                className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white text-gray-900 min-w-[200px]"
+                className="w-full sm:min-w-[200px] px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white text-gray-900"
                 defaultValue=""
               >
                 <option value="" disabled>
@@ -77,8 +77,8 @@ export default function CategoryFilter({
                 })}
               </select>
             </div>
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="text-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+              <Badge variant="secondary" className="text-sm w-fit">
                 {productCount} {productCount === 1 ? "product" : "products"} found
               </Badge>
               {selectedCategories.length > 0 && (

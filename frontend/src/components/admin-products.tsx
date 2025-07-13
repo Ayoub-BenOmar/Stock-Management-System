@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/
 import { Badge } from "./ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
-import { Plus, MoreHorizontal, Edit, Trash2 } from "lucide-react"
+import { Plus, MoreHorizontal, Edit, Trash2, Menu } from "lucide-react"
 import AdminSidebar from "./admin-sidebar"
 import AddProductModal from "./add-product-modal"
 import type { Product } from "./ProductCard"
@@ -18,6 +18,7 @@ export default function AdminProductsPage() {
   const [suppliers, setSuppliers] = useState<{ id: number; name: string }[]>([])
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -159,9 +160,12 @@ export default function AdminProductsPage() {
 
   return (
     <div className="flex h-screen">
-      <AdminSidebar activeItem="products" />
-      <div className="flex-1 flex flex-col ml-64">
+      <AdminSidebar activeItem="products" open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex-1 flex flex-col md:ml-64">
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+          <button className="md:hidden mr-2" onClick={() => setSidebarOpen(true)}>
+            <Menu className="h-6 w-6" />
+          </button>
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-semibold">Products Management</h1>
           </div>
@@ -170,12 +174,12 @@ export default function AdminProductsPage() {
         <div className="flex-1 space-y-4 p-4">
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                   <CardTitle>Products</CardTitle>
                   <CardDescription>Manage your product inventory</CardDescription>
                 </div>
-                <Button onClick={() => setIsAddModalOpen(true)}>
+                <Button onClick={() => setIsAddModalOpen(true)} className="w-full sm:w-auto">
                   <Plus className="h-4 w-4 mr-2" />
                   Add Product
                 </Button>
@@ -183,18 +187,18 @@ export default function AdminProductsPage() {
             </CardHeader>
             <CardContent>
               {/* Products Table */}
-              <div className="rounded-md border">
+              <div className="rounded-md border overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Image</TableHead>
+                      <TableHead className="hidden sm:table-cell">Image</TableHead>
                       <TableHead>Name</TableHead>
-                      <TableHead>Category</TableHead>
+                      <TableHead className="hidden md:table-cell">Category</TableHead>
                       <TableHead>Price</TableHead>
-                      <TableHead>Stock</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Supplier</TableHead>
-                      <TableHead>Updated</TableHead>
+                      <TableHead className="hidden lg:table-cell">Stock</TableHead>
+                      <TableHead className="hidden lg:table-cell">Status</TableHead>
+                      <TableHead className="hidden xl:table-cell">Supplier</TableHead>
+                      <TableHead className="hidden xl:table-cell">Updated</TableHead>
                       <TableHead className="w-[70px]">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -202,7 +206,7 @@ export default function AdminProductsPage() {
                     {Array.isArray(products) && products.filter(Boolean).map((product) => (
                       product && product.id !== undefined && product.category && product.supplier && (
                         <TableRow key={product.id}>
-                          <TableCell>
+                          <TableCell className="hidden sm:table-cell">
                             <img
                               src={product.pic ? `http://localhost:3000${product.pic}` : "/placeholder.svg"}
                               alt={product.name}
@@ -215,13 +219,17 @@ export default function AdminProductsPage() {
                               {product.description && (
                                 <div className="text-sm text-muted-foreground line-clamp-1">{product.description}</div>
                               )}
+                              <div className="sm:hidden mt-1">
+                                <Badge variant="outline" className="text-xs">{product.category.name}</Badge>
+                                <span className="text-sm text-muted-foreground ml-2">{formatPrice(product.price)}</span>
+                              </div>
                             </div>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden md:table-cell">
                             <Badge variant="outline">{product.category.name}</Badge>
                           </TableCell>
-                          <TableCell className="font-medium">{formatPrice(product.price)}</TableCell>
-                          <TableCell>
+                          <TableCell className="hidden sm:table-cell md:table-cell font-medium">{formatPrice(product.price)}</TableCell>
+                          <TableCell className="hidden lg:table-cell">
                             <div className="flex items-center gap-2">
                               <span
                                 className={
@@ -246,13 +254,13 @@ export default function AdminProductsPage() {
                               )}
                             </div>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden lg:table-cell">
                             <Badge variant={product.active ? "default" : "secondary"}>
                               {product.active ? "Active" : "Inactive"}
                             </Badge>
                           </TableCell>
-                          <TableCell>{product.supplier.name}</TableCell>
-                          <TableCell className="text-sm text-muted-foreground">{formatDate(product.updatedAt)}</TableCell>
+                          <TableCell className="hidden xl:table-cell">{product.supplier.name}</TableCell>
+                          <TableCell className="hidden xl:table-cell text-sm text-muted-foreground">{formatDate(product.updatedAt)}</TableCell>
                           <TableCell>
                             <div className="flex gap-2">
                               <Button variant="ghost" size="icon" onClick={() => openEditModal(product)}>

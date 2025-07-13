@@ -41,20 +41,20 @@ export default function CartItemComponent({ item, onQuantityChange, onRemove }: 
   return (
     <Card className="overflow-hidden">
       <CardContent className="p-4">
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4">
           {/* Product Image */}
-          <div className="flex-shrink-0 w-[70%]">
+          <div className="flex-shrink-0 w-full sm:w-[70%]">
             <img
               src={product.pic ? `http://localhost:3000${product.pic}` : "/placeholder.svg"}
               alt={product.name}
-              className="w-full h-full rounded-lg object-cover"
+              className="w-full h-48 sm:h-full rounded-lg object-cover"
             />
           </div>
 
           {/* Product Details */}
           <div className="flex-1 min-w-0">
             <div className="flex justify-between items-start mb-2">
-              <div>
+              <div className="flex-1">
                 <h3 className="font-semibold text-lg line-clamp-2">{product.name}</h3>
                 <Badge variant="outline" className="mt-1">
                   {product.category.name}
@@ -64,7 +64,7 @@ export default function CartItemComponent({ item, onQuantityChange, onRemove }: 
                 variant="ghost"
                 size="icon"
                 onClick={() => onRemove(product.id)}
-                className="text-muted-foreground hover:text-destructive"
+                className="text-muted-foreground hover:text-destructive flex-shrink-0"
               >
                 <Trash2 className="h-4 w-4" />
                 <span className="sr-only">Remove item</span>
@@ -75,9 +75,9 @@ export default function CartItemComponent({ item, onQuantityChange, onRemove }: 
               <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{product.description}</p>
             )}
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
               <span className="text-sm font-medium">Qty:</span>
-              <div className="flex items-center border rounded-lg">
+              <div className="flex items-center border rounded-lg w-fit">
                 <Button
                   variant="ghost"
                   size="icon"

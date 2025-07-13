@@ -246,7 +246,7 @@ export default function AddProductModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{editingProduct ? "Edit Product" : "Add New Product"}</DialogTitle>
           <DialogDescription>
@@ -255,7 +255,7 @@ export default function AddProductModal({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="name">Product Name *</Label>
               <Input
@@ -310,7 +310,7 @@ export default function AddProductModal({
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="quantity">Stock Quantity *</Label>
               <Input
@@ -343,7 +343,7 @@ export default function AddProductModal({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="supplier">Supplier *</Label>
               <select
@@ -375,11 +375,11 @@ export default function AddProductModal({
             </div>
           </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="w-full sm:w-auto">
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
               {isLoading ? "Saving..." : editingProduct ? "Update Product" : "Add Product"}
             </Button>
           </DialogFooter>

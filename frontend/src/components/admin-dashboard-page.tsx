@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Button } from "./ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card"
 import { Alert, AlertDescription } from "./ui/alert"
-import { RefreshCw, AlertCircle, TrendingUp } from "lucide-react"
+import { RefreshCw, AlertCircle, TrendingUp, Menu } from "lucide-react"
 import AdminSidebar from "./admin-sidebar"
 import DashboardStatsCards from "./dashboard-stats-card"
 import DashboardCharts from "./dashboard-chart"
@@ -15,6 +15,7 @@ export default function AdminDashboardPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isUpdating, setIsUpdating] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const fetchDashboardStats = async () => {
     try {
@@ -68,9 +69,12 @@ export default function AdminDashboardPage() {
   if (isLoading) {
     return (
       <div className="flex h-screen">
-        <AdminSidebar activeItem="dashboard" />
-        <div className="flex-1 flex flex-col ml-64">
+        <AdminSidebar activeItem="dashboard" open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <div className="flex-1 flex flex-col md:ml-64">
           <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+            <button className="md:hidden mr-2" onClick={() => setSidebarOpen(true)}>
+              <Menu className="h-6 w-6" />
+            </button>
             <div className="flex items-center gap-2">
               <TrendingUp className="h-5 w-5 text-primary" />
               <h1 className="text-xl font-semibold">Dashboard</h1>
@@ -96,9 +100,12 @@ export default function AdminDashboardPage() {
   if (error && !stats) {
     return (
       <div className="flex h-screen">
-        <AdminSidebar activeItem="dashboard" />
-        <div className="flex-1 flex flex-col ml-64">
+        <AdminSidebar activeItem="dashboard" open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <div className="flex-1 flex flex-col md:ml-64">
           <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+            <button className="md:hidden mr-2" onClick={() => setSidebarOpen(true)}>
+              <Menu className="h-6 w-6" />
+            </button>
             <div className="flex items-center gap-2">
               <TrendingUp className="h-5 w-5 text-primary" />
               <h1 className="text-xl font-semibold">Dashboard</h1>
@@ -121,15 +128,18 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="flex h-screen">
-      <AdminSidebar activeItem="dashboard" />
-      <div className="flex-1 flex flex-col ml-64">
+      <AdminSidebar activeItem="dashboard" open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex-1 flex flex-col md:ml-64">
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+          <button className="md:hidden mr-2" onClick={() => setSidebarOpen(true)}>
+            <Menu className="h-6 w-6" />
+          </button>
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-2">
               <TrendingUp className="h-5 w-5 text-primary" />
               <h1 className="text-xl font-semibold">Dashboard</h1>
             </div>
-            <Button onClick={updateDashboardStats} disabled={isUpdating} variant="outline">
+            <Button onClick={updateDashboardStats} disabled={isUpdating} variant="outline" className="hidden sm:flex">
               <RefreshCw className={`h-4 w-4 mr-2 ${isUpdating ? "animate-spin" : ""}`} />
               {isUpdating ? "Updating..." : "Update Stats"}
             </Button>
